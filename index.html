@@ -1,1 +1,429 @@
 
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime-AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #3b176d 0%, #120b25 45%, #080612 100%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 500px;
+      height: 100vh;
+      max-height: 900px;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+    }
+
+    /* HEADER */
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 5px 18px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .logo span {
+      color: #b56cff;
+    }
+
+    .status {
+      background: rgba(255,255,255,0.08);
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      color: #cfc5ff;
+    }
+
+    .online {
+      color: #6dffb0;
+    }
+
+    /* CHARACTER */
+
+    .character-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 330px;
+    }
+
+    .character {
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 35%, #ffffff 0%, #d9c5ff 8%, #8d52d8 35%, #35165e 70%);
+      box-shadow:
+        0 0 30px rgba(171, 94, 255, 0.5),
+        0 0 90px rgba(117, 55, 190, 0.25);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 100px;
+      animation: floating 3s ease-in-out infinite;
+      border: 2px solid rgba(255,255,255,0.15);
+    }
+
+    @keyframes floating {
+      0%,100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .character-name {
+      margin-top: 18px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .character-status {
+      margin-top: 6px;
+      color: #aaa0c8;
+      font-size: 13px;
+    }
+
+    /* CHAT */
+
+    .chat {
+      height: 210px;
+      overflow-y: auto;
+      padding: 8px 3px;
+      margin-bottom: 12px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 15px;
+      border-radius: 18px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+      font-size: 14px;
+    }
+
+    .ai {
+      background: rgba(255,255,255,0.09);
+      border-bottom-left-radius: 5px;
+    }
+
+    .user {
+      background: linear-gradient(135deg, #8e45df, #5c28a7);
+      margin-left: auto;
+      border-bottom-right-radius: 5px;
+    }
+
+    /* INPUT */
+
+    .input-area {
+      display: flex;
+      gap: 8px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 8px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+    }
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #9088a5;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      color: white;
+    }
+
+    .mic,
+    .send {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .mic {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .mic.listening {
+      background: #d84dff;
+      animation: pulse 1s infinite;
+    }
+
+    .send {
+      background: linear-gradient(135deg, #a95cff, #6b2cc9);
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(216,77,255,0.6);
+      }
+
+      70% {
+        box-shadow: 0 0 0 12px rgba(216,77,255,0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(216,77,255,0);
+      }
+    }
+
+    footer {
+      text-align: center;
+      color: #665e78;
+      font-size: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>
+    <div class="logo">Anime<span>-AI</span> ✨</div>
+
+    <div class="status">
+      <span class="online">●</span> En ligne
+    </div>
+  </header>
+
+  <section class="character-area">
+
+    <div class="character">
+      🌸
+    </div>
+
+    <div class="character-name">
+      Aiko
+    </div>
+
+    <div class="character-status">
+      Ton compagnon anime ✨
+    </div>
+
+  </section>
+
+  <div class="chat" id="chat">
+
+    <div class="message ai">
+      Salut ! 👋✨ Je suis Aiko.  
+      Je peux discuter avec toi et bientôt devenir ton véritable compagnon IA. 🤖💜
+    </div>
+
+  </div>
+
+  <div class="input-area">
+
+    <button class="mic" id="micButton">
+      🎤
+    </button>
+
+    <input
+      id="messageInput"
+      type="text"
+      placeholder="Parle à Aiko..."
+      autocomplete="off"
+    >
+
+    <button class="send" id="sendButton">
+      ➤
+    </button>
+
+  </div>
+
+  <footer>
+    Anime-AI • Version 1.0
+  </footer>
+
+</div>
+
+<script>
+
+  const input = document.getElementById("messageInput");
+  const sendButton = document.getElementById("sendButton");
+  const micButton = document.getElementById("micButton");
+  const chat = document.getElementById("chat");
+
+  function addMessage(text, type) {
+
+    const message = document.createElement("div");
+
+    message.className = "message " + type;
+
+    message.textContent = text;
+
+    chat.appendChild(message);
+
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function speak(text) {
+
+    if ("speechSynthesis" in window) {
+
+      const voice = new SpeechSynthesisUtterance(text);
+
+      voice.lang = "fr-FR";
+
+      voice.rate = 1;
+
+      speechSynthesis.cancel();
+
+      speechSynthesis.speak(voice);
+    }
+  }
+
+  function sendMessage() {
+
+    const text = input.value.trim();
+
+    if (!text) return;
+
+    addMessage(text, "user");
+
+    input.value = "";
+
+    setTimeout(() => {
+
+      let response;
+
+      if (text.toLowerCase().includes("salut") ||
+          text.toLowerCase().includes("bonjour")) {
+
+        response = "Coucouuu ! 🌸 Ça va ? Je suis contente de te voir !";
+
+      } else if (text.toLowerCase().includes("qui es-tu")) {
+
+        response = "Je suis Aiko, ton compagnon Anime-AI ! ✨";
+
+      } else {
+
+        response = "Hmm... 👀 Je t'écoute ! Mon vrai cerveau IA arrive bientôt. 🤖✨";
+      }
+
+      addMessage(response, "ai");
+
+      speak(response);
+
+    }, 1500);
+  }
+
+  sendButton.addEventListener("click", sendMessage);
+
+  input.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+
+  });
+
+  /* MICRO */
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (SpeechRecognition) {
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "fr-FR";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+    micButton.addEventListener("click", () => {
+
+      recognition.start();
+
+      micButton.classList.add("listening");
+
+    });
+
+    recognition.onresult = (event) => {
+
+      const text = event.results[0][0].transcript;
+
+      input.value = text;
+
+      micButton.classList.remove("listening");
+
+      sendMessage();
+    };
+
+    recognition.onerror = () => {
+
+      micButton.classList.remove("listening");
+
+    };
+
+    recognition.onend = () => {
+
+      micButton.classList.remove("listening");
+
+    };
+
+  } else {
+
+    micButton.addEventListener("click", () => {
+
+      alert("La reconnaissance vocale n'est pas disponible sur ce navigateur.");
+
+    });
+
+  }
+
+</script>
+
+</body>
+</html>
